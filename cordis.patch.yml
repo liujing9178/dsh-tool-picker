@@ -1,0 +1,23 @@
+# ============================================================================
+# dsh-tool-picker —— bundle patch（dsh 原生机制：package.json 的 dsh.bundle.patch 指向本文件）
+# ============================================================================
+# 作用：把插件挂进 profile 的 Loader 树，从而出现在「设置 → 插件 → 已安装插件」里，
+#      并获得和其他插件一样的启用/停用开关。
+#
+# name 必须等于包名 dsh-tool-picker。
+# enabled：auto = 工具定义 ≥ minToolTokens 或 ≥ autoPct% 窗口才启用
+#          on   = 强制启用
+#          off  = 完全不注册（等于没装）
+# off/on 必须带引号，YAML 会把裸 off 读成布尔 false。
+# ============================================================================
+
+- insert:
+    - id: tool-picker
+      name: dsh-tool-picker
+      config:
+        enabled: "auto"
+        minToolTokens: 10000
+        autoPct: 10
+        thresholdPct: 5
+        listingMaxTokens: 3000
+        contextWindow: 1000000
