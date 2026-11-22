@@ -1,0 +1,43 @@
+# dsh-tool-picker 的 profile 补丁片段
+#
+# 用法：把下面 - insert: 那一块整段追加到
+#   C:\Users\LENOVO\.dsh\profiles\desktop\cordis.patch.yml
+# 末尾（注意顶格，与文件里其它 - insert: 同级），然后重启 dsh。
+#
+# 只想先看看效果、不想影响任何现有行为时，把 enabled 设成 off：
+#   插件会加载、会注册三个桥工具和目录 context，但不会裁剪任何工具。
+#   （off 时 catalogText 返回空串，等于完全静默）
+#
+# 与既有插件的共存（重要）：
+#   · dsh-tool-surface-policy 用 restrict({deny})，本插件用 restrict({allow})，
+#     dsh 的 mask 语义是多层取交集 → 两者叠加 = 只保留 allow 里且没被 deny 的工具，
+#     不会互相打架，也不会把对方的设置清掉（各自持有自己的 disposer）。
+#   · dsh-tool-search 已经会在目录里挂一份自己的清单。两个都开会看到两份目录，
+#     模型容易混淆。建议装本插件后把它关掉：
+#         - id: tool-search
+#           config:
+#             enabled: off
+
+- insert:
+    - id: tool-picker
+      name: dsh-tool-picker
+      config:
+        # auto = 工具定义 ≥ minToolTokens 或 ≥ autoPct% 窗口才启用；on = 强制启用；off = 完全不裁
+        enabled: auto
+        minToolTokens: 10000     # Anthropic 官方"值得上"的门槛
+        autoPct: 10              # Claude Code ENABLE_TOOL_SEARCH=auto:N 的默认值
+        thresholdPct: 5          # 目录预算 = min(5% × contextWindow, listingMaxTokens)
+        listingMaxTokens: 3000   # 目录文本上限；想更省设 800～1000，会落到"只给名字"档
+        contextWindow: 1000000   # 本机 deepseek provider 默认值
+        minCatalogSize: 12       # 工具比这还少就完全不折腾
+        maxSelected: 40          # 一次最多加载多少个（视频类任务常要 30-45 个）
+        detailChars: 70          # 目录里每条说明的截断长度（中文约 30 字）
+        core:                    # 永远直通、不被裁剪的工具
+          - read
+          - write
+          - edit
+          - grep
+          - glob
+          - win_bash
+          - todo_write
+          - skill
