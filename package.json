@@ -1,0 +1,40 @@
+{
+  "name": "dsh-tool-picker",
+  "version": "0.1.0",
+  "description": "Progressive tool disclosure for DeepSeek Harness (DSH): hand the model a tool catalog first, let it pick with tool_pick, then send only the picked tools' schemas. Designed for large tool surfaces (200+ tools, 40k+ tokens per turn).",
+  "type": "module",
+  "main": "index.mjs",
+  "exports": {
+    ".": "./index.mjs",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "index.mjs",
+    "cordis.patch.yml",
+    "README.md",
+    "README.zh.md",
+    "DESIGN.md",
+    "LICENSE",
+    "patch-snippet.yml"
+  ],
+  "keywords": [
+    "dsh",
+    "dsh-plugin",
+    "deepseek-harness",
+    "tool-search",
+    "progressive-disclosure",
+    "tool-catalog",
+    "context-management",
+    "token-saving",
+    "agent"
+  ],
+  "license": "MIT",
+  "engines": {
+    "node": ">=20"
+  },
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    }
+  }
+}
